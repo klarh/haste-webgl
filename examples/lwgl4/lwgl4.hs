@@ -115,13 +115,13 @@ initBuffers gl = do
 
   return (pyramidVertsBuffer, pyramidColorBuffer, cubeVertsBuffer, cubeColorBuffer, cubeIndexBuffer)
 
-drawScene::Context->(UniformLocation, UniformLocation)->IORef (Float, Float)->
+drawScene::Context->(UniformLocation, UniformLocation)->Int->
            (Buffer, Buffer, Buffer, Buffer, Buffer)->(AttribLocation, AttribLocation)->IO ()
-drawScene gl (pIdx, mvIdx) refs buffers attribs = do
+drawScene gl (pIdx, mvIdx) time buffers attribs = do
   let (pyramidVertsBuffer, pyramidColorBuffer, cubeVertsBuffer, cubeColorBuffer, cubeIndexBuffer) = buffers
       (posAttrib, colorAttrib) = attribs
-
-  (rPyramid, rCube) <- readIORef refs
+      rPyramid = (fromIntegral time/100)
+      rCube = (3.5*(fromIntegral time)/100)
 
   viewport gl 0 0 640 480
   clear gl [ColorBufferBit, DepthBufferBit]
@@ -170,9 +170,9 @@ main = do
 
   ref <- newIORef (0, 0)::IO (IORef (Float, Float))
 
-  Main.forever 50 $ do
+  Main.forever (floor $ 1000/60) $ do
     clearColor gl 0 0 0 1
-    modifyIORef ref (\(x, y) -> (x+1, y+2))
-    drawScene gl (pmUni, mvUni) ref buffers (posAttr, colAttr)
+    t <- ffi "(function() {return (new Date().getTime());})" :: IO Int
+    drawScene gl (pmUni, mvUni) t buffers (posAttr, colAttr)
 
   return ()
