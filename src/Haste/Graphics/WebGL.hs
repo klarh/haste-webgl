@@ -18,6 +18,9 @@ data DrawMode = Points | LineStrip | LineLoop | Lines | TriangleStrip |
                 TriangleFan | Triangles
 newtype DrawMode' = DrawMode' JSAny deriving (Pack, Unpack)
 
+data ElementType = UByteElt | UShortElt
+newtype ElementType' = ElementType' JSAny deriving (Pack, Unpack)
+
 newtype Shader = Shader JSAny deriving (Pack, Unpack)
 
 data ShaderType = VertexShader | FragmentShader
@@ -183,6 +186,21 @@ clear ctx bits = clear' ctx bits'
 viewport::Context->Int->Int->Int->Int->IO ()
 viewport = ffi "(function(ctx, x, y, w, h) {ctx.viewport(x, y, w, h);})"
 
+idxDrawMode::Context->DrawMode->DrawMode'
+idxDrawMode ctx mode = unsafePerformIO $ idxDrawMode' ctx strmode
+  where
+    idxDrawMode'::Context->String->IO DrawMode'
+    idxDrawMode' = ffi "(function(ctx, name) {return ctx[name];})"
+
+    strmode = case mode of
+      Points -> "POINTS"
+      LineStrip -> "LINE_STRIP"
+      LineLoop -> "LINE_LOOP"
+      Lines -> "LINES"
+      TriangleStrip -> "TRIANGLE_STRIP"
+      TriangleFan -> "TRIANGLE_FAN"
+      _ -> "TRIANGLES"
+
 drawArrays::Context->DrawMode->Int->Int->IO ()
 drawArrays ctx mode = drawArrays' ctx mode'
   where
@@ -191,20 +209,24 @@ drawArrays ctx mode = drawArrays' ctx mode'
 
     mode' = idxDrawMode ctx mode
 
-    idxDrawMode::Context->DrawMode->DrawMode'
-    idxDrawMode ctx mode = unsafePerformIO $ idxDrawMode' ctx strmode
-      where
-        idxDrawMode'::Context->String->IO DrawMode'
-        idxDrawMode' = ffi "(function(ctx, name) {return ctx[name];})"
+drawElements::Context->DrawMode->Int->ElementType->Int->IO ()
+drawElements ctx mode count typ = drawElements' ctx mode' count typ'
+  where
+    drawElements'::Context->DrawMode'->Int->ElementType'->Int->IO ()
+    drawElements' = ffi "(function(ctx, mode, count, type, offset) {ctx.drawElements(mode, count, type, offset);})"
 
-        strmode = case mode of
-          Points -> "POINTS"
-          LineStrip -> "LINE_STRIP"
-          LineLoop -> "LINE_LOOP"
-          Lines -> "LINES"
-          TriangleStrip -> "TRIANGLE_STRIP"
-          TriangleFan -> "TRIANGLE_FAN"
-          _ -> "TRIANGLES"
+    mode' = idxDrawMode ctx mode
+    typ' = idxEltType ctx typ
+
+    idxEltType::Context->ElementType->ElementType'
+    idxEltType ctx typ = unsafePerformIO $ idxEltType' ctx strtyp
+      where
+        idxEltType'::Context->String->IO ElementType'
+        idxEltType' = ffi "(function(ctx, name) {return ctx[name];})"
+
+        strtyp = case typ of
+          UByteElt -> "UNSIGNED_BYTE"
+          _ -> "UNSIGNED_SHORT"
 
 enable::Context->Ability->IO ()
 enable ctx abil = enable' ctx abil'
