@@ -10,9 +10,11 @@ import Haste.Graphics.WebGL.Types
 import Haste.Graphics.WebGL.Arrays
 import Haste.Graphics.WebGL.ProgramsShaders
 
-newtype AttributeInfo = AttributeInfo JSAny deriving (Pack, Unpack)
+newtype AttribInfo = AttribInfo JSAny deriving (Pack, Unpack)
+newtype AttribLocation = AttribLocation JSAny deriving (Pack, Unpack)
 
 newtype UniformInfo = UniformInfo JSAny deriving (Pack, Unpack)
+newtype UniformLocation = UniformLocation JSAny deriving (Pack, Unpack)
 
 -- webgl doesn't support fixed
 data VertexAttribType = Byte | Short | UnsignedByte | UnsignedShort | FloatVAType
@@ -72,107 +74,107 @@ disableVertexAttribArray = ffi "(function(ctx, index) {ctx.disableVertexAttribAr
 enableVertexAttribArray::Context->Int->IO ()
 enableVertexAttribArray = ffi "(function(ctx, index) {ctx.enableVertexAttribArray(index);})"
 
-getActiveAttrib::Context->Program->Int->IO AttributeInfo
+getActiveAttrib::Context->Program->Int->IO AttribInfo
 getActiveAttrib = ffi "(function(ctx, program, index) {return ctx.getActiveAttrib(program, index);})"
 
 getActiveUniform::Context->Program->Int->IO UniformInfo
 getActiveUniform = ffi "(function(ctx, program, index) {return ctx.getActiveUniform(program, index);})"
 
-getAttribLocation::Context->Program->String->IO Int
+getAttribLocation::Context->Program->String->IO AttribLocation
 getAttribLocation = ffi "(function(ctx, program, name) {return ctx.getAttribLocation(program, name);})"
 
 getUniform::Context->Program->Int->IO JSAny
 getUniform = ffi "(function(ctx, program, index) {return ctx.getUniform(program, index);})"
 
-getUniformLocation::Context->Program->String->IO Int
+getUniformLocation::Context->Program->String->IO UniformLocation
 getUniformLocation = ffi "(function(ctx, program, name) {return ctx.getUniformLocation(program, name);})"
 
-getVertexAttrib::Context->Int->VertexAttrPName->IO JSAny
+getVertexAttrib::Context->AttribLocation->VertexAttrPName->IO JSAny
 getVertexAttrib = ffi "(function(ctx, index, pname) {return ctx.getVertexAttrib(index, pname);})"
 
-getVertexAttribOffset::Context->Int->VertexAttrPName->IO Int
+getVertexAttribOffset::Context->AttribLocation->VertexAttrPName->IO Int
 getVertexAttribOffset = ffi "(function(ctx, index, pname) {return ctx.getVertexAttribOffset(index, pname);})"
 
-uniform1f::Context->Int->Float->IO ()
+uniform1f::Context->UniformLocation->Float->IO ()
 uniform1f = ffi "(function(ctx, uniform, val) {ctx.uniform1f(uniform, val);})"
 
-uniform2f::Context->Int->Float->Float->IO ()
+uniform2f::Context->UniformLocation->Float->Float->IO ()
 uniform2f = ffi "(function(ctx, uniform, x, y) {ctx.uniform2f(uniform, x, y);})"
 
-uniform3f::Context->Int->Float->Float->Float->IO ()
+uniform3f::Context->UniformLocation->Float->Float->Float->IO ()
 uniform3f = ffi "(function(ctx, uniform, x, y, z) {ctx.uniform3f(uniform, x, y, z);})"
 
-uniform4f::Context->Int->Float->Float->Float->Float->IO ()
+uniform4f::Context->UniformLocation->Float->Float->Float->Float->IO ()
 uniform4f = ffi "(function(ctx, uniform, x, y, z, w) {ctx.uniform4f(uniform, x, y, z, w);})"
 
-uniform1i::Context->Int->Int->IO ()
+uniform1i::Context->UniformLocation->Int->IO ()
 uniform1i = ffi "(function(ctx, uniform, val) {ctx.uniform1i(uniform, val);})"
 
-uniform2i::Context->Int->Int->Int->IO ()
+uniform2i::Context->UniformLocation->Int->Int->IO ()
 uniform2i = ffi "(function(ctx, uniform, x, y) {ctx.uniform2i(uniform, x, y);})"
 
-uniform3i::Context->Int->Int->Int->Int->IO ()
+uniform3i::Context->UniformLocation->Int->Int->Int->IO ()
 uniform3i = ffi "(function(ctx, uniform, x, y, z) {ctx.uniform3i(uniform, x, y, z);})"
 
-uniform4i::Context->Int->Int->Int->Int->Int->IO ()
+uniform4i::Context->UniformLocation->Int->Int->Int->Int->IO ()
 uniform4i = ffi "(function(ctx, uniform, x, y, z, w) {ctx.uniform4i(uniform, x, y, z, w);})"
 
-uniform1fv::Context->Int->Float32Array->IO ()
+uniform1fv::Context->UniformLocation->Float32Array->IO ()
 uniform1fv = ffi "(function(ctx, uniform, arr) {ctx.uniform1fv(uniform, arr);})"
 
-uniform2fv::Context->Int->Float32Array->IO ()
+uniform2fv::Context->UniformLocation->Float32Array->IO ()
 uniform2fv = ffi "(function(ctx, uniform, arr) {ctx.uniform2fv(uniform, arr);})"
 
-uniform3fv::Context->Int->Float32Array->IO ()
+uniform3fv::Context->UniformLocation->Float32Array->IO ()
 uniform3fv = ffi "(function(ctx, uniform, arr) {ctx.uniform3fv(uniform, arr);})"
 
-uniform4fv::Context->Int->Float32Array->IO ()
+uniform4fv::Context->UniformLocation->Float32Array->IO ()
 uniform4fv = ffi "(function(ctx, uniform, arr) {ctx.uniform4fv(uniform, arr);})"
 
-uniform1iv::Context->Int->Int32Array->IO ()
+uniform1iv::Context->UniformLocation->Int32Array->IO ()
 uniform1iv = ffi "(function(ctx, uniform, arr) {ctx.uniform1iv(uniform, arr);})"
 
-uniform2iv::Context->Int->Int32Array->IO ()
+uniform2iv::Context->UniformLocation->Int32Array->IO ()
 uniform2iv = ffi "(function(ctx, uniform, arr) {ctx.uniform2iv(uniform, arr);})"
 
-uniform3iv::Context->Int->Int32Array->IO ()
+uniform3iv::Context->UniformLocation->Int32Array->IO ()
 uniform3iv = ffi "(function(ctx, uniform, arr) {ctx.uniform3iv(uniform, arr);})"
 
-uniform4iv::Context->Int->Int32Array->IO ()
+uniform4iv::Context->UniformLocation->Int32Array->IO ()
 uniform4iv = ffi "(function(ctx, uniform, arr) {ctx.uniform4iv(uniform, arr);})"
 
-uniformMatrix2fv::Context->Int->Float32Array->IO ()
+uniformMatrix2fv::Context->UniformLocation->Float32Array->IO ()
 uniformMatrix2fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix2fv(uniform, arr);})"
 
-uniformMatrix3fv::Context->Int->Float32Array->IO ()
+uniformMatrix3fv::Context->UniformLocation->Float32Array->IO ()
 uniformMatrix3fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix3fv(uniform, arr);})"
 
-uniformMatrix4fv::Context->Int->Float32Array->IO ()
+uniformMatrix4fv::Context->UniformLocation->Float32Array->IO ()
 uniformMatrix4fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix4fv(uniform, arr);})"
 
-vertexAttrib1f::Context->Int->Float->IO ()
+vertexAttrib1f::Context->AttribLocation->Float->IO ()
 vertexAttrib1f = ffi "(function(ctx, attrib, val) {ctx.vertexAttrib1f(attrib, val);})"
 
-vertexAttrib2f::Context->Int->Float->IO ()
+vertexAttrib2f::Context->AttribLocation->Float->IO ()
 vertexAttrib2f = ffi "(function(ctx, attrib, x, y) {ctx.vertexAttrib2f(attrib, x, y);})"
 
-vertexAttrib3f::Context->Int->Float->IO ()
+vertexAttrib3f::Context->AttribLocation->Float->IO ()
 vertexAttrib3f = ffi "(function(ctx, attrib, x, y, z) {ctx.vertexAttrib3f(attrib, x, y, z);})"
 
-vertexAttrib4f::Context->Int->Float->IO ()
+vertexAttrib4f::Context->AttribLocation->Float->IO ()
 vertexAttrib4f = ffi "(function(ctx, attrib, x, y, z, w) {ctx.vertexAttrib4f(attrib, x, y, z, w);})"
 
-vertexAttrib1fv::Context->Int->Float32Array->IO ()
+vertexAttrib1fv::Context->AttribLocation->Float32Array->IO ()
 vertexAttrib1fv = ffi "(function(ctx, attrib, arr) {ctx.vertexAttrib1fv(attrib, arr);})"
 
-vertexAttrib2fv::Context->Int->Float32Array->IO ()
+vertexAttrib2fv::Context->AttribLocation->Float32Array->IO ()
 vertexAttrib2fv = ffi "(function(ctx, attrib, arr) {ctx.vertexAttrib2fv(attrib, arr);})"
 
-vertexAttrib3fv::Context->Int->Float32Array->IO ()
+vertexAttrib3fv::Context->AttribLocation->Float32Array->IO ()
 vertexAttrib3fv = ffi "(function(ctx, attrib, arr) {ctx.vertexAttrib3fv(attrib, arr);})"
 
-vertexAttrib4fv::Context->Int->Float32Array->IO ()
+vertexAttrib4fv::Context->AttribLocation->Float32Array->IO ()
 vertexAttrib4fv = ffi "(function(ctx, attrib, arr) {ctx.vertexAttrib4fv(attrib, arr);})"
 
-vertexAttribPointer::Context->Int->Int->VertexAttribType->Bool->Int->Int->IO ()
+vertexAttribPointer::Context->AttribLocation->Int->VertexAttribType->Bool->Int->Int->IO ()
 vertexAttribPointer = ffi "(function(ctx, index, size, type, normalized, stride, offset) {ctx.vertexAttribPointer(index, size, type, normalized, stride, offset);})"
