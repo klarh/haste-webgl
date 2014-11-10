@@ -71,6 +71,9 @@ bufferDataSized = ffi "(function(ctx, target, size, usage) {ctx.bufferData(targe
 bufferData::TypedArray a=>Context->BufferTarget->a->BufferUsage->IO ()
 bufferData = ffi "(function(ctx, target, data, usage) {ctx.bufferData(target, data, usage);})"
 
+bufferData'::TypedArray a=>Context->BufferTarget->BufferUsage->a->IO ()
+bufferData' ctx targ usage dat = bufferData ctx targ dat usage
+
 bufferSubData::TypedArray a=>Context->BufferTarget->Int->a->IO ()
 bufferSubData = ffi "(function(ctx, target, offset, data) {ctx.bufferSubData(target, offset, data);})"
 

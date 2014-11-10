@@ -1,6 +1,7 @@
 {-# LANGUAGE EmptyDataDecls, OverloadedStrings #-}
 
 import Control.Monad
+import Data.Bits ((.|.))
 import Data.Vec
 import Haste
 import Haste.Foreign
@@ -47,45 +48,45 @@ initShaders gl = do
 
   return (pmatUniform, mvmatUniform, vertexAttrib)
 
-setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Float, Mat44 Float)->IO ()
+setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Double, Mat44 Double)->IO ()
 setMatrixUniforms gl (pIdx, mvIdx) (pMat, mvMat) = do
-  uniformMatrix4fv gl pIdx pMat
-  uniformMatrix4fv gl mvIdx mvMat
+  uniformMatrix4fv gl pIdx =<< (fromJSArray . matToList . transpose $ pMat)
+  uniformMatrix4fv gl mvIdx =<< (fromJSArray . matToList . transpose $ mvMat)
 
 initBuffers::Context->IO (Buffer, Buffer)
 initBuffers gl = do
   triVerticesBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer triVerticesBuffer
-  let triVertices = [0, -1, 0, -1, 1, 0, 1, 1, 0]::[Float]
+  bindBuffer gl ArrayBufferTarget triVerticesBuffer
+  let triVertices = [0, -1, 0, -1, 1, 0, 1, 1, 0]::[Double]
 
-  bufferData gl ArrayBuffer triVertices StaticDraw
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray triVertices :: IO Float32Array)
 
   sqVerticesBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer sqVerticesBuffer
+  bindBuffer gl ArrayBufferTarget sqVerticesBuffer
 
-  let sqVertices = [1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0]::[Float]
+  let sqVertices = [1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0]::[Double]
 
-  bufferData gl ArrayBuffer sqVertices StaticDraw
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray sqVertices :: IO Float32Array)
 
   return (triVerticesBuffer, sqVerticesBuffer)
 
 drawScene::Context->(UniformLocation, UniformLocation)->(Buffer, Buffer)->AttribLocation->IO ()
 drawScene gl (pIdx, mvIdx) (triVerticesBuffer, sqVerticesBuffer) posAttrib = do
   viewport gl 0 0 640 480
-  clear gl [ColorBufferBit, DepthBufferBit]
+  clear gl $ ColorBufferBit .|. DepthBufferBit
 
   let pmat =  perspective 0.1 100 (pi/4) (640/480)
       mvmat =  translation (negate 1.5:.0:.negate 20:.())
 
-  bindBuffer gl ArrayBuffer triVerticesBuffer
-  vertexAttribPointer gl posAttrib 3 Float False 0 0
+  bindBuffer gl ArrayBufferTarget triVerticesBuffer
+  vertexAttribPointer gl posAttrib 3 FloatVAType False 0 0
   setMatrixUniforms gl (pIdx, mvIdx) (pmat, mvmat)
   drawArrays gl Triangles 0 3
 
   let mvmat =  translation (5:.negate 4:.negate 20:.())
 
-  bindBuffer gl ArrayBuffer sqVerticesBuffer
-  vertexAttribPointer gl posAttrib 3 Float False 0 0
+  bindBuffer gl ArrayBufferTarget sqVerticesBuffer
+  vertexAttribPointer gl posAttrib 3 FloatVAType False 0 0
   setMatrixUniforms gl (pIdx, mvIdx) (pmat, mvmat)
   drawArrays gl TriangleStrip 0 4
 
