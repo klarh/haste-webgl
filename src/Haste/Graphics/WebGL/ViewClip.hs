@@ -8,7 +8,7 @@ import Haste.Prim
 
 import Haste.Graphics.WebGL.Types
 
-depthRange::Context->Float->Float->IO ()
+depthRange::Context->Double->Double->IO ()
 depthRange = ffi "(function(ctx, zNear, zFar) {ctx.depthRange(zNear, zFar);})"
 
 scissor::Context->Int->Int->Int->Int->IO ()

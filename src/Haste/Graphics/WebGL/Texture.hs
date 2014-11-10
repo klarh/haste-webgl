@@ -163,7 +163,7 @@ isTexture = ffi "(function(ctx, texture) {return ctx.isTexture(texture);})"
 texImage2D::Context->TextureTarget->Int->TextureFormat->TextureFormat->TextureEltType->JSAny->IO ()
 texImage2D = ffi "(function(ctx, target, level, internalformat, format, type, object) {ctx.texImage2D(target, level, internalformat, format, type, object);})"
 
-texParameterf::Context->TextureType->TexPName->Float->IO ()
+texParameterf::Context->TextureType->TexPName->Double->IO ()
 texParameterf = ffi "(function(ctx, target, pname, param) {ctx.texParameterf(target, pname, param);})"
 
 texParameteri::Context->TextureType->TexPName->Int->IO ()

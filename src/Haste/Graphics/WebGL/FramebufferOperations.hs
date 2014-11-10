@@ -47,10 +47,10 @@ instance Bits ClearBit where
 clear::Context->ClearBit->IO ()
 clear = ffi "(function(ctx, mask) {ctx.clear(mask);})"
 
-clearColor::Context->Float->Float->Float->Float->IO ()
+clearColor::Context->Double->Double->Double->Double->IO ()
 clearColor = ffi "(function(ctx, r, g, b, a) {ctx.clearColor(r, g, b, a);})"
 
-clearDepth::Context->Float->IO ()
+clearDepth::Context->Double->IO ()
 clearDepth = ffi "(function(ctx, depth) {ctx.clearDepth(depth);})"
 
 clearStencil::Context->Int->IO ()

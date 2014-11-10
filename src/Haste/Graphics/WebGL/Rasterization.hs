@@ -30,8 +30,8 @@ cullFace = ffi "(function(ctx, mode) {ctx.cullFace(mode);})"
 frontFace::Context->FaceDirection->IO ()
 frontFace = ffi "(function(ctx, mode) {ctx.frontFace(mode);})"
 
-lineWidth::Context->Float->IO ()
+lineWidth::Context->Double->IO ()
 lineWidth = ffi "(function(ctx, width) {ctx.lineWidth(width);})"
 
-polygonOffset::Context->Float->Float->IO ()
+polygonOffset::Context->Double->Double->IO ()
 polygonOffset = ffi "(function(ctx, factor, units) {ctx.polygonOffset(factor, units);})"

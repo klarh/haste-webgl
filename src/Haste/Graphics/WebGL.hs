@@ -1,6 +1,20 @@
 {-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving #-}
 
-module Haste.Graphics.WebGL where
+module Haste.Graphics.WebGL (
+  module Haste.Graphics.WebGL,
+  module Haste.Graphics.WebGL.Types,
+  module Haste.Graphics.WebGL.Arrays,
+  module Haste.Graphics.WebGL.Buffer,
+  module Haste.Graphics.WebGL.Framebuffer,
+  module Haste.Graphics.WebGL.FramebufferOperations,
+  module Haste.Graphics.WebGL.PerFragment,
+  module Haste.Graphics.WebGL.ProgramsShaders,
+  module Haste.Graphics.WebGL.Rasterization,
+  module Haste.Graphics.WebGL.Special,
+  module Haste.Graphics.WebGL.Texture,
+  module Haste.Graphics.WebGL.UniformsAttributes,
+  module Haste.Graphics.WebGL.ViewClip
+  ) where
 
 import Haste.DOM
 import Haste.Foreign

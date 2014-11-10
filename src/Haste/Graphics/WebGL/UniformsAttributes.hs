@@ -95,16 +95,16 @@ getVertexAttrib = ffi "(function(ctx, index, pname) {return ctx.getVertexAttrib(
 getVertexAttribOffset::Context->AttribLocation->VertexAttrPName->IO Int
 getVertexAttribOffset = ffi "(function(ctx, index, pname) {return ctx.getVertexAttribOffset(index, pname);})"
 
-uniform1f::Context->UniformLocation->Float->IO ()
+uniform1f::Context->UniformLocation->Double->IO ()
 uniform1f = ffi "(function(ctx, uniform, val) {ctx.uniform1f(uniform, val);})"
 
-uniform2f::Context->UniformLocation->Float->Float->IO ()
+uniform2f::Context->UniformLocation->Double->Double->IO ()
 uniform2f = ffi "(function(ctx, uniform, x, y) {ctx.uniform2f(uniform, x, y);})"
 
-uniform3f::Context->UniformLocation->Float->Float->Float->IO ()
+uniform3f::Context->UniformLocation->Double->Double->Double->IO ()
 uniform3f = ffi "(function(ctx, uniform, x, y, z) {ctx.uniform3f(uniform, x, y, z);})"
 
-uniform4f::Context->UniformLocation->Float->Float->Float->Float->IO ()
+uniform4f::Context->UniformLocation->Double->Double->Double->Double->IO ()
 uniform4f = ffi "(function(ctx, uniform, x, y, z, w) {ctx.uniform4f(uniform, x, y, z, w);})"
 
 uniform1i::Context->UniformLocation->Int->IO ()
@@ -152,16 +152,16 @@ uniformMatrix3fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix3fv(unifo
 uniformMatrix4fv::Context->UniformLocation->Float32Array->IO ()
 uniformMatrix4fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix4fv(uniform, arr);})"
 
-vertexAttrib1f::Context->AttribLocation->Float->IO ()
+vertexAttrib1f::Context->AttribLocation->Double->IO ()
 vertexAttrib1f = ffi "(function(ctx, attrib, val) {ctx.vertexAttrib1f(attrib, val);})"
 
-vertexAttrib2f::Context->AttribLocation->Float->IO ()
+vertexAttrib2f::Context->AttribLocation->Double->Double->IO ()
 vertexAttrib2f = ffi "(function(ctx, attrib, x, y) {ctx.vertexAttrib2f(attrib, x, y);})"
 
-vertexAttrib3f::Context->AttribLocation->Float->IO ()
+vertexAttrib3f::Context->AttribLocation->Double->Double->Double->IO ()
 vertexAttrib3f = ffi "(function(ctx, attrib, x, y, z) {ctx.vertexAttrib3f(attrib, x, y, z);})"
 
-vertexAttrib4f::Context->AttribLocation->Float->IO ()
+vertexAttrib4f::Context->AttribLocation->Double->Double->Double->Double->IO ()
 vertexAttrib4f = ffi "(function(ctx, attrib, x, y, z, w) {ctx.vertexAttrib4f(attrib, x, y, z, w);})"
 
 vertexAttrib1fv::Context->AttribLocation->Float32Array->IO ()

@@ -207,7 +207,7 @@ instance Pack StencilFail where
 instance Unpack StencilFail where
   unpack = unpack . fromEnum
 
-blendColor::Context->Float->Float->Float->Float->IO ()
+blendColor::Context->Double->Double->Double->Double->IO ()
 blendColor = ffi "(function(ctx, red, green, blue, alpha) {ctx.blendColor(red, green, blue, alpha);})"
 
 blendEquationSeparate::Context->BlendMode->BlendMode->IO ()
@@ -223,7 +223,7 @@ blendFuncSeparate = ffi "(function(ctx, srcRGB, dstRGB, srcAlpha, dstAlpha) {ctx
 depthFunc::Context->DepthFunc->IO ()
 depthFunc = ffi "(function(ctx, func) {ctx.depthFunc(func);})"
 
-sampleCoverage::Context->Float->Bool->IO ()
+sampleCoverage::Context->Double->Bool->IO ()
 sampleCoverage = ffi "(function(ctx, value, invert) {ctx.sampleCoverage(value, invert);})"
 
 stencilFunc::Context->StencilFunc->Int->Int->IO ()
