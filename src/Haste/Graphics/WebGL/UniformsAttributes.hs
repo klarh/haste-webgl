@@ -68,22 +68,22 @@ instance Pack VertexAttrPName where
 instance Unpack VertexAttrPName where
   unpack = unpack . fromEnum
 
-disableVertexAttribArray::Context->Int->IO ()
+disableVertexAttribArray::Context->AttribLocation->IO ()
 disableVertexAttribArray = ffi "(function(ctx, index) {ctx.disableVertexAttribArray(index);})"
 
-enableVertexAttribArray::Context->Int->IO ()
+enableVertexAttribArray::Context->AttribLocation->IO ()
 enableVertexAttribArray = ffi "(function(ctx, index) {ctx.enableVertexAttribArray(index);})"
 
-getActiveAttrib::Context->Program->Int->IO AttribInfo
+getActiveAttrib::Context->Program->AttribLocation->IO AttribInfo
 getActiveAttrib = ffi "(function(ctx, program, index) {return ctx.getActiveAttrib(program, index);})"
 
-getActiveUniform::Context->Program->Int->IO UniformInfo
+getActiveUniform::Context->Program->UniformLocation->IO UniformInfo
 getActiveUniform = ffi "(function(ctx, program, index) {return ctx.getActiveUniform(program, index);})"
 
 getAttribLocation::Context->Program->String->IO AttribLocation
 getAttribLocation = ffi "(function(ctx, program, name) {return ctx.getAttribLocation(program, name);})"
 
-getUniform::Context->Program->Int->IO JSAny
+getUniform::Context->Program->UniformLocation->IO JSAny
 getUniform = ffi "(function(ctx, program, index) {return ctx.getUniform(program, index);})"
 
 getUniformLocation::Context->Program->String->IO UniformLocation
@@ -144,13 +144,13 @@ uniform4iv::Context->UniformLocation->Int32Array->IO ()
 uniform4iv = ffi "(function(ctx, uniform, arr) {ctx.uniform4iv(uniform, arr);})"
 
 uniformMatrix2fv::Context->UniformLocation->Float32Array->IO ()
-uniformMatrix2fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix2fv(uniform, arr);})"
+uniformMatrix2fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix2fv(uniform, ctx.FALSE, arr);})"
 
 uniformMatrix3fv::Context->UniformLocation->Float32Array->IO ()
-uniformMatrix3fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix3fv(uniform, arr);})"
+uniformMatrix3fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix3fv(uniform, ctx.FALSE, arr);})"
 
 uniformMatrix4fv::Context->UniformLocation->Float32Array->IO ()
-uniformMatrix4fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix4fv(uniform, arr);})"
+uniformMatrix4fv = ffi "(function(ctx, uniform, arr) {ctx.uniformMatrix4fv(uniform, ctx.FALSE, arr);})"
 
 vertexAttrib1f::Context->AttribLocation->Double->IO ()
 vertexAttrib1f = ffi "(function(ctx, attrib, val) {ctx.vertexAttrib1f(attrib, val);})"
