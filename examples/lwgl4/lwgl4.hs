@@ -2,6 +2,7 @@
 
 import Control.Monad
 import Data.IORef
+import Data.Bits ((.|.))
 import Data.Vec
 import Data.Word
 import Haste
@@ -55,63 +56,63 @@ initShaders gl = do
 
   return (pmatUniform, mvmatUniform, vertPos, vertCol)
 
-setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Float, Mat44 Float)->IO ()
+setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Double, Mat44 Double)->IO ()
 setMatrixUniforms gl (pIdx, mvIdx) (pMat, mvMat) = do
-  uniformMatrix4fv gl pIdx pMat
-  uniformMatrix4fv gl mvIdx mvMat
+  uniformMatrix4fv gl pIdx =<< (fromJSArray . matToList . transpose $ pMat)
+  uniformMatrix4fv gl mvIdx =<< (fromJSArray . matToList . transpose $ mvMat)
 
 initBuffers::Context->IO (Buffer, Buffer, Buffer, Buffer, Buffer)
 initBuffers gl = do
   pyramidVertsBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer pyramidVertsBuffer
+  bindBuffer gl ArrayBufferTarget pyramidVertsBuffer
 
   let pyramidVerts = [0, 1, 0, -1, -1, 1, 1, -1, 1,
                       0, 1, 0, 1, -1, 1, 1, -1, -1,
                       0, 1, 0, 1, -1, -1, -1, -1, -1,
-                      0, 1, 0, -1, -1, -1, -1, -1, 1]::[Float]
+                      0, 1, 0, -1, -1, -1, -1, -1, 1]::[Double]
 
-  bufferData gl ArrayBuffer pyramidVerts StaticDraw
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray pyramidVerts :: IO Float32Array)
 
   pyramidColorBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer pyramidColorBuffer
+  bindBuffer gl ArrayBufferTarget pyramidColorBuffer
 
   let pyramidColors = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1,
                        1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1,
                        1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1,
-                       1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1]::[Float]
+                       1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1]::[Double]
 
-  bufferData gl ArrayBuffer pyramidColors StaticDraw
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray pyramidColors :: IO Float32Array)
 
   cubeVertsBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer cubeVertsBuffer
+  bindBuffer gl ArrayBufferTarget cubeVertsBuffer
 
   let cubeVerts = [-1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1,
                    -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1,
                    -1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1,
                    -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1,
                    1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1,
-                   -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1]::[Float]
-  bufferData gl ArrayBuffer cubeVerts StaticDraw
+                   -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1]::[Double]
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray cubeVerts :: IO Float32Array)
 
   cubeColorBuffer <- createBuffer gl
-  bindBuffer gl ArrayBuffer cubeColorBuffer
+  bindBuffer gl ArrayBufferTarget cubeColorBuffer
 
   let faceColors = [[1, 0, 0, 1], [1, 1, 0, 1],
                     [0, 1, 0, 1], [1, 0.5, 0.5, 1],
-                    [1, 0, 1, 1], [0, 0, 1, 1]]::[[Float]]
+                    [1, 0, 1, 1], [0, 0, 1, 1]]::[[Double]]
       cubeColors = concat . concatMap (Prelude.take 4 . repeat) $ faceColors
-  bufferData gl ArrayBuffer cubeColors StaticDraw
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray cubeColors :: IO Float32Array)
 
   cubeIndexBuffer <- createBuffer gl
-  bindBuffer gl ElementArrayBuffer cubeIndexBuffer
+  bindBuffer gl ElementArrayBufferTarget cubeIndexBuffer
 
   let cubeIndices = [0, 1, 2, 0, 2, 3,
                      4, 5, 6, 4, 6, 7,
                      8, 9, 10, 8, 10, 11,
                      12, 13, 14, 12, 14, 15,
                      16, 17, 18, 16, 18, 19,
-                     20, 21, 22, 20, 22, 23]::[Word16]
-  bufferData gl ElementArrayBuffer cubeIndices StaticDraw
+                     20, 21, 22, 20, 22, 23]::[Int]
+  bufferData' gl ElementArrayBufferTarget StaticDraw =<< (fromJSArray cubeIndices :: IO Uint16Array)
 
   return (pyramidVertsBuffer, pyramidColorBuffer, cubeVertsBuffer, cubeColorBuffer, cubeIndexBuffer)
 
@@ -124,17 +125,17 @@ drawScene gl (pIdx, mvIdx) time buffers attribs = do
       rCube = (3.5*(fromIntegral time)/100)
 
   viewport gl 0 0 640 480
-  clear gl [ColorBufferBit, DepthBufferBit]
+  clear gl (ColorBufferBit .|. DepthBufferBit)
 
   let pmat =  perspective 0.1 100 (pi/4) (640/480)
       mvmat = translation (negate 1.5:.0:.negate 8:.())
       rotated = mvmat `multmm` rotationY (rPyramid*pi/180)
 
-  bindBuffer gl ArrayBuffer pyramidVertsBuffer
-  vertexAttribPointer gl posAttrib 3 Float False 0 0
+  bindBuffer gl ArrayBufferTarget pyramidVertsBuffer
+  vertexAttribPointer gl posAttrib 3 FloatVAType False 0 0
 
-  bindBuffer gl ArrayBuffer pyramidColorBuffer
-  vertexAttribPointer gl colorAttrib 4 Float False 0 0
+  bindBuffer gl ArrayBufferTarget pyramidColorBuffer
+  vertexAttribPointer gl colorAttrib 4 FloatVAType False 0 0
 
   setMatrixUniforms gl (pIdx, mvIdx) (pmat, rotated)
   drawArrays gl Triangles 0 (4*3)
@@ -142,20 +143,20 @@ drawScene gl (pIdx, mvIdx) time buffers attribs = do
   let mvmat = translation (1.5:.0:.negate 8:.())
       rotated = mvmat `multmm` rotationVec (normalize (1:.1:.1:.())) (rCube*pi/180)
 
-  bindBuffer gl ArrayBuffer cubeVertsBuffer
-  vertexAttribPointer gl posAttrib 3 Float False 0 0
+  bindBuffer gl ArrayBufferTarget cubeVertsBuffer
+  vertexAttribPointer gl posAttrib 3 FloatVAType False 0 0
 
-  bindBuffer gl ArrayBuffer cubeColorBuffer
-  vertexAttribPointer gl colorAttrib 4 Float False 0 0
+  bindBuffer gl ArrayBufferTarget cubeColorBuffer
+  vertexAttribPointer gl colorAttrib 4 FloatVAType False 0 0
 
-  bindBuffer gl ElementArrayBuffer cubeIndexBuffer
+  bindBuffer gl ElementArrayBufferTarget cubeIndexBuffer
 
   setMatrixUniforms gl (pIdx, mvIdx) (pmat, rotated)
-  drawElements gl Triangles 36 UShortElt 0
+  drawElements gl Triangles 36 EltUnsignedShort 0
 
 forever delay m = m >> setTimeout delay (Main.forever delay m)
 
-main = do
+main = setTimeout 100 $ do
   let root = documentBody
   canvas <- newElem "canvas"
   setAttr canvas "width" "640"
@@ -168,7 +169,7 @@ main = do
 
   enable gl DepthTest
 
-  ref <- newIORef (0, 0)::IO (IORef (Float, Float))
+  ref <- newIORef (0, 0)::IO (IORef (Double, Double))
 
   Main.forever (floor $ 1000/60) $ do
     clearColor gl 0 0 0 1
