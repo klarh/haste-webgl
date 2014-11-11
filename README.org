@@ -1,0 +1,12 @@
+* haste-webgl
+
+This is a quick and dirty binding of the webGL spec
+(https://www.khronos.org/registry/webgl/specs/1.0/) for haste. Modules
+are arranged by (and type signatures were obtained from) their
+location on the quick reference card located at
+https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf .
+
+** Examples
+
+A couple of examples from "Learning WebGL" (http://learningwebgl.com/)
+are available in the examples/ folder.
