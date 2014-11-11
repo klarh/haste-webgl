@@ -15,7 +15,7 @@ class (Pack a, Unpack a)=>TypedArray a where
   type EltType a
   newSizedArray::Int->IO a
   copyTypedArray::TypedArray b=>b->IO a
-  fromJSArray::Unpack (EltType a)=>[(EltType a)]->IO a
+  fromJSArray::Unpack (EltType a)=>[EltType a]->IO a
   fromArrayBuffer::Int->Int->ArrayBuffer->IO a
 
   byteLength::a->IO Int
@@ -23,9 +23,9 @@ class (Pack a, Unpack a)=>TypedArray a where
   bytesPerElement::a->IO Int
   bytesPerElement = ffi "(function(arr) {return arr.BYTES_PER_ELEMENT;})"
 
-  getIndex::Pack (EltType a)=>a->Int->IO ((EltType a))
+  getIndex::Pack (EltType a)=>a->Int->IO (EltType a)
   getIndex = ffi "(function(arr, idx) {return arr[idx];})"
-  setIndex::Unpack (EltType a)=>a->Int->((EltType a))->IO ()
+  setIndex::Unpack (EltType a)=>a->Int->EltType a->IO ()
   setIndex = ffi "(function(arr, idx, val) {arr[idx] = val;})"
 
 newtype Int8Array = Int8Array JSAny deriving (Pack, Unpack)

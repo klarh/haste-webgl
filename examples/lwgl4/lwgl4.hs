@@ -1,4 +1,4 @@
-{-# LANGUAGE EmptyDataDecls, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Control.Monad
 import Data.IORef
@@ -100,7 +100,7 @@ initBuffers gl = do
   let faceColors = [[1, 0, 0, 1], [1, 1, 0, 1],
                     [0, 1, 0, 1], [1, 0.5, 0.5, 1],
                     [1, 0, 1, 1], [0, 0, 1, 1]]::[[Double]]
-      cubeColors = concat . concatMap (Prelude.take 4 . repeat) $ faceColors
+      cubeColors = concat . concatMap (Prelude.replicate 4) $ faceColors
   bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray cubeColors :: IO Float32Array)
 
   cubeIndexBuffer <- createBuffer gl
@@ -121,8 +121,8 @@ drawScene::Context->(UniformLocation, UniformLocation)->Int->
 drawScene gl (pIdx, mvIdx) time buffers attribs = do
   let (pyramidVertsBuffer, pyramidColorBuffer, cubeVertsBuffer, cubeColorBuffer, cubeIndexBuffer) = buffers
       (posAttrib, colorAttrib) = attribs
-      rPyramid = (fromIntegral time/100)
-      rCube = (3.5*(fromIntegral time)/100)
+      rPyramid = fromIntegral time/100
+      rCube = 3.5*fromIntegral time/100
 
   viewport gl 0 0 640 480
   clear gl (ColorBufferBit .|. DepthBufferBit)

@@ -1,4 +1,4 @@
-{-# LANGUAGE EmptyDataDecls, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Control.Monad
 import Data.Bits ((.|.))

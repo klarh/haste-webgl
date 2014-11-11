@@ -1,37 +1,24 @@
-{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings #-}
 
-module Haste.Graphics.WebGL (
-  module Haste.Graphics.WebGL,
-  module Haste.Graphics.WebGL.Types,
-  module Haste.Graphics.WebGL.Arrays,
-  module Haste.Graphics.WebGL.Buffer,
-  module Haste.Graphics.WebGL.Framebuffer,
-  module Haste.Graphics.WebGL.FramebufferOperations,
-  module Haste.Graphics.WebGL.PerFragment,
-  module Haste.Graphics.WebGL.ProgramsShaders,
-  module Haste.Graphics.WebGL.Rasterization,
-  module Haste.Graphics.WebGL.Special,
-  module Haste.Graphics.WebGL.Texture,
-  module Haste.Graphics.WebGL.UniformsAttributes,
-  module Haste.Graphics.WebGL.ViewClip
-  ) where
+module Haste.Graphics.WebGL (module Haste.Graphics.WebGL, module X)
+       where
 
 import Haste.DOM
 import Haste.Foreign
 import Haste.Prim
 
-import Haste.Graphics.WebGL.Types
-import Haste.Graphics.WebGL.Arrays
-import Haste.Graphics.WebGL.Buffer
-import Haste.Graphics.WebGL.Framebuffer
-import Haste.Graphics.WebGL.FramebufferOperations
-import Haste.Graphics.WebGL.PerFragment
-import Haste.Graphics.WebGL.ProgramsShaders
-import Haste.Graphics.WebGL.Rasterization
-import Haste.Graphics.WebGL.Special
-import Haste.Graphics.WebGL.Texture
-import Haste.Graphics.WebGL.UniformsAttributes
-import Haste.Graphics.WebGL.ViewClip
+import Haste.Graphics.WebGL.Types as X
+import Haste.Graphics.WebGL.Arrays as X
+import Haste.Graphics.WebGL.Buffer as X
+import Haste.Graphics.WebGL.Framebuffer as X
+import Haste.Graphics.WebGL.FramebufferOperations as X
+import Haste.Graphics.WebGL.PerFragment as X
+import Haste.Graphics.WebGL.ProgramsShaders as X
+import Haste.Graphics.WebGL.Rasterization as X
+import Haste.Graphics.WebGL.Special as X
+import Haste.Graphics.WebGL.Texture as X
+import Haste.Graphics.WebGL.UniformsAttributes as X
+import Haste.Graphics.WebGL.ViewClip as X
 
 getContext::Elem->String->IO Context
 getContext = ffi "(function(elt, name) {return elt.getContext(name);})"
