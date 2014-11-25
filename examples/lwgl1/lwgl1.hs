@@ -7,6 +7,7 @@ import Haste
 import Haste.Foreign
 import Haste.DOM
 import Haste.Graphics.WebGL
+import qualified Haste.Graphics.WebGL as WGL
 
 fragmentShaderText = unlines [
   "precision mediump float;",
@@ -50,8 +51,8 @@ initShaders gl = do
 
 setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Double, Mat44 Double)->IO ()
 setMatrixUniforms gl (pIdx, mvIdx) (pMat, mvMat) = do
-  uniformMatrix4fv gl pIdx =<< (fromJSArray . matToList . transpose $ pMat)
-  uniformMatrix4fv gl mvIdx =<< (fromJSArray . matToList . transpose $ mvMat)
+  uniformMatrix4fv gl pIdx =<< (WGL.fromList . matToList . transpose $ pMat)
+  uniformMatrix4fv gl mvIdx =<< (WGL.fromList . matToList . transpose $ mvMat)
 
 initBuffers::Context->IO (Buffer, Buffer)
 initBuffers gl = do
@@ -59,14 +60,14 @@ initBuffers gl = do
   bindBuffer gl ArrayBufferTarget triVerticesBuffer
   let triVertices = [0, -1, 0, -1, 1, 0, 1, 1, 0]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray triVertices :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList triVertices :: IO Float32Array)
 
   sqVerticesBuffer <- createBuffer gl
   bindBuffer gl ArrayBufferTarget sqVerticesBuffer
 
   let sqVertices = [1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (fromJSArray sqVertices :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList sqVertices :: IO Float32Array)
 
   return (triVerticesBuffer, sqVerticesBuffer)
 
