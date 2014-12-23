@@ -13,7 +13,7 @@ newArrayBuffer::Int->IO ArrayBuffer
 newArrayBuffer = ffi "(function(byteLength) {return ArrayBuffer(byteLength);})"
 
 arrayBufferLength::ArrayBuffer->IO Int
-arrayBufferLength = ffi "(function(buf) {return buf.length;})"
+arrayBufferLength = ffi "(function(buf) {return buf.byteLength;})"
 
 class (Pack a, Unpack a)=>TypedArray a where
   type EltType a
