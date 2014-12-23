@@ -23,6 +23,9 @@ import Haste.Graphics.WebGL.ViewClip as X
 getContext::Elem->String->IO Context
 getContext = ffi "(function(elt, name) {return elt.getContext(name);})"
 
+isContextValid::Context->IO Bool
+isContextValid = ffi "(function(ctx) {return Boolean(ctx);})"
+
 getSupportedExtensions::Context->IO [String]
 getSupportedExtensions = ffi "(function(ctx) {return ctx.getSupportedExtensions();})"
 
