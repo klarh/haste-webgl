@@ -51,8 +51,8 @@ initShaders gl = do
 
 setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Double, Mat44 Double)->IO ()
 setMatrixUniforms gl (pIdx, mvIdx) (pMat, mvMat) = do
-  uniformMatrix4fv gl pIdx =<< (WGL.fromList . matToList . transpose $ pMat)
-  uniformMatrix4fv gl mvIdx =<< (WGL.fromList . matToList . transpose $ mvMat)
+  uniformMatrix4fv gl pIdx (WGL.fromList . matToList . transpose $ pMat)
+  uniformMatrix4fv gl mvIdx (WGL.fromList . matToList . transpose $ mvMat)
 
 initBuffers::Context->IO (Buffer, Buffer)
 initBuffers gl = do
@@ -60,14 +60,14 @@ initBuffers gl = do
   bindBuffer gl ArrayBufferTarget triVerticesBuffer
   let triVertices = [0, -1, 0, -1, 1, 0, 1, 1, 0]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList triVertices :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList triVertices :: Float32Array)
 
   sqVerticesBuffer <- createBuffer gl
   bindBuffer gl ArrayBufferTarget sqVerticesBuffer
 
   let sqVertices = [1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList sqVertices :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList sqVertices :: Float32Array)
 
   return (triVerticesBuffer, sqVerticesBuffer)
 

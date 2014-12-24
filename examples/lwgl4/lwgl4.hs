@@ -59,8 +59,8 @@ initShaders gl = do
 
 setMatrixUniforms::Context->(UniformLocation, UniformLocation)->(Mat44 Double, Mat44 Double)->IO ()
 setMatrixUniforms gl (pIdx, mvIdx) (pMat, mvMat) = do
-  uniformMatrix4fv gl pIdx =<< (WGL.fromList . matToList . transpose $ pMat)
-  uniformMatrix4fv gl mvIdx =<< (WGL.fromList . matToList . transpose $ mvMat)
+  uniformMatrix4fv gl pIdx (WGL.fromList . matToList . transpose $ pMat)
+  uniformMatrix4fv gl mvIdx (WGL.fromList . matToList . transpose $ mvMat)
 
 initBuffers::Context->IO (Buffer, Buffer, Buffer, Buffer, Buffer)
 initBuffers gl = do
@@ -72,7 +72,7 @@ initBuffers gl = do
                       0, 1, 0, 1, -1, -1, -1, -1, -1,
                       0, 1, 0, -1, -1, -1, -1, -1, 1]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList pyramidVerts :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList pyramidVerts :: Float32Array)
 
   pyramidColorBuffer <- createBuffer gl
   bindBuffer gl ArrayBufferTarget pyramidColorBuffer
@@ -82,7 +82,7 @@ initBuffers gl = do
                        1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1,
                        1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1]::[Double]
 
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList pyramidColors :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList pyramidColors :: Float32Array)
 
   cubeVertsBuffer <- createBuffer gl
   bindBuffer gl ArrayBufferTarget cubeVertsBuffer
@@ -93,7 +93,7 @@ initBuffers gl = do
                    -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1,
                    1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1,
                    -1, -1, -1, -1, -1, 1, -1, 1, 1, -1, 1, -1]::[Double]
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList cubeVerts :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList cubeVerts :: Float32Array)
 
   cubeColorBuffer <- createBuffer gl
   bindBuffer gl ArrayBufferTarget cubeColorBuffer
@@ -102,7 +102,7 @@ initBuffers gl = do
                     [0, 1, 0, 1], [1, 0.5, 0.5, 1],
                     [1, 0, 1, 1], [0, 0, 1, 1]]::[[Double]]
       cubeColors = concat . concatMap (Prelude.replicate 4) $ faceColors
-  bufferData' gl ArrayBufferTarget StaticDraw =<< (WGL.fromList cubeColors :: IO Float32Array)
+  bufferData' gl ArrayBufferTarget StaticDraw (WGL.fromList cubeColors :: Float32Array)
 
   cubeIndexBuffer <- createBuffer gl
   bindBuffer gl ElementArrayBufferTarget cubeIndexBuffer
@@ -113,7 +113,7 @@ initBuffers gl = do
                      12, 13, 14, 12, 14, 15,
                      16, 17, 18, 16, 18, 19,
                      20, 21, 22, 20, 22, 23]::[Int]
-  bufferData' gl ElementArrayBufferTarget StaticDraw =<< (WGL.fromList cubeIndices :: IO Uint16Array)
+  bufferData' gl ElementArrayBufferTarget StaticDraw (WGL.fromList cubeIndices :: Uint16Array)
 
   return (pyramidVertsBuffer, pyramidColorBuffer, cubeVertsBuffer, cubeColorBuffer, cubeIndexBuffer)
 
