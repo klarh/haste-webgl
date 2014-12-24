@@ -7,8 +7,8 @@ import Haste.DOM
 import Haste.Foreign
 import Haste.Prim
 
+import Haste.JSArray.Typed as X
 import Haste.Graphics.WebGL.Types as X
-import Haste.Graphics.WebGL.Arrays as X
 import Haste.Graphics.WebGL.Buffer as X
 import Haste.Graphics.WebGL.Framebuffer as X
 import Haste.Graphics.WebGL.FramebufferOperations as X

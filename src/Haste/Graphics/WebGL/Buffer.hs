@@ -6,8 +6,8 @@ import Haste.DOM
 import Haste.Foreign
 import Haste.Prim
 
+import Haste.JSArray.Typed
 import Haste.Graphics.WebGL.Types
-import Haste.Graphics.WebGL.Arrays
 
 data BufferTarget = ArrayBufferTarget | ElementArrayBufferTarget
 
