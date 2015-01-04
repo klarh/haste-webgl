@@ -6,6 +6,7 @@ import Data.Bits
 import Haste.DOM
 import Haste.Foreign
 import Haste.Prim
+import System.IO.Unsafe (unsafePerformIO)
 
 import Haste.Graphics.WebGL.Types
 import Haste.Graphics.WebGL.Texture
@@ -77,6 +78,9 @@ instance Pack FramebufferAttachmentPName where
 
 instance Unpack FramebufferAttachmentPName where
   unpack = unpack . fromEnum
+
+noFramebuffer::Framebuffer
+noFramebuffer = unsafePerformIO (ffi "(function() {return null;})"::IO Framebuffer)
 
 bindFramebuffer::Context->Framebuffer->IO ()
 bindFramebuffer = ffi "(function(ctx, framebuffer) {ctx.bindFramebuffer(ctx.FRAMEBUFFER, framebuffer);})"
