@@ -18,6 +18,7 @@ cabal-version:       >=1.10
 library
   exposed-modules:     Haste.Graphics.WebGL
                        Haste.Graphics.WebGL.Buffer
+                       Haste.Graphics.WebGL.Extensions.InstancedArrays
                        Haste.Graphics.WebGL.Framebuffer
                        Haste.Graphics.WebGL.FramebufferOperations
                        Haste.Graphics.WebGL.PerFragment
