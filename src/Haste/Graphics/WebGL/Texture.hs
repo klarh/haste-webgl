@@ -133,6 +133,32 @@ instance Pack TexPName where
 instance Unpack TexPName where
   unpack = unpack . fromEnum
 
+data TextureFilter = Nearest | Linear | NearestMipmapNearest |
+                     LinearMipmapNearest | NearestMipmapLinear |
+                     LinearMipmapLinear
+
+instance Enum TextureFilter where
+  fromEnum Nearest = 0x2600
+  fromEnum Linear = 0x2601
+  fromEnum NearestMipmapNearest = 0x2700
+  fromEnum LinearMipmapNearest = 0x2701
+  fromEnum NearestMipmapLinear = 0x2702
+  fromEnum LinearMipmapLinear = 0x2703
+
+  toEnum 0x2600 = Nearest
+  toEnum 0x2601 = Linear
+  toEnum 0x2700 = NearestMipmapNearest
+  toEnum 0x2701 = LinearMipmapNearest
+  toEnum 0x2702 = NearestMipmapLinear
+  toEnum 0x2703 = LinearMipmapLinear
+  toEnum _ = undefined
+
+instance Pack TextureFilter where
+  pack = toEnum . pack
+
+instance Unpack TextureFilter where
+  unpack = unpack . fromEnum
+
 activeTexture::Context->TextureEnum->IO ()
 activeTexture = ffi "(function(ctx, texture) {ctx.activeTexture(texture);})"
 
